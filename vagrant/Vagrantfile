@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+NODE_COUNT = 4
+Vagrant.configure("2") do |config|
+  #Configure the machines
+  #config.vm.network "forwarded_port" , host: 33390 , guest: 3389   
+  config.vm.communicator = "winrm"
+  config.winrm.username = "vagrant"
+  config.winrm.password = "vagrant"
+	
+  config.vm.guest = :windows
+  config.windows.halt_timeout = 600
+
+  (1..NODE_COUNT).each do |i|
+
+    config.vm.define "node#{i}" do |subconfig|
+    subconfig.vm.box = "v_windows_10_base"
+    subconfig.vm.hostname = "vm#{i}"
+    subconfig.vm.network "private_network", ip: "10.0.0.#{i+10}"
+
+    end
+  
+   end
+end
