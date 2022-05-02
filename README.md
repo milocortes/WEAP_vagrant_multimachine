@@ -24,4 +24,4 @@ El entorno virtualizado se presenta en la siguiente figura:
 
 Para el servicio de virtualización, se utilizará [VirtualBox](https://www.virtualbox.org/).
 
-Los detalles de la implementación se encuentran en el directorio [vagrant](./vagrant/README.md) to visit a website.
+Los detalles de la implementación se encuentran en el directorio [vagrant](./vagrant/README.md).
