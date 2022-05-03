@@ -1,0 +1,21 @@
+# Install Linux on Windows with WSL
+
+ Windows Subsystem for Linux (WSL) es una capa de compatibilidad desarrollada por Microsoft para correr ejecutables de Linux (en formato ELF) nativamente en Windows 10 y Windows Server 2019.
+ 
+ 
+## Enabling the WSL Windows Feature
+
+To enable WSL, open up PowerShell as administrator and run the following  [here](https://adamtheautomator.com/windows-subsystem-for-linux/):
+
+```
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux 
+```
+
+Por default, no hay distribución instalada en wls. Para instalar Ubuntu en wsl, ejecutamos el siguiente comando [here](https://stackoverflow.com/questions/44829878/trying-to-use-bash-on-windows-and-got-no-installed-distributions-message) :
+
+```
+lxrun /install
+```
+
+
+Config mpi4py [Introduction to Parallel Programming with MPI: Setup](https://stackoverflow.com/questions/44829878/trying-to-use-bash-on-windows-and-got-no-installed-distributions-message)
