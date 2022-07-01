@@ -1,1 +1,1 @@
-# WEAP model
+# WEAP - MODFLOW model
