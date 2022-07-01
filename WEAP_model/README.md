@@ -5,4 +5,4 @@ En el siguiente [enlace](https://drive.google.com/file/d/13DRdaaBScwPzRcBvGqODw6
 2. En "Manage Areas" seleccionar "Restore".
 3. Ubicar el archivo .WEAP que ha descargado, seleccionarlo y abrirlo.
 ## Lectura de versiones
-Para leer la última versión del modelo entrar a la carpeta "Backup"
+Para leer la última versión del modelo entrar a la carpeta "backup"
