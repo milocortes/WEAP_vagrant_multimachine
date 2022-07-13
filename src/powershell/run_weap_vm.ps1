@@ -31,4 +31,23 @@ function run_weap(){
   }
 }
 
+
+Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+Write-Host "------------   Mount NFS service --------------"
+Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+
+New-PSDrive S -PsProvider FileSystem -Root \\10.0.0.200\storage
+
+Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+Write-Host "---------------   RUN WEAP -------------------"
+Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+
 run_weap
+
+
+Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+Write-Host "-------   SEND DATA TO NFS STORAGE ------------"
+Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+
+Copy-Item "C:\Users\vagrant\inputs\WEAP\*" -Destination "S:WEAP" -recurse -Force
+Copy-Item "C:\Users\vagrant\inputs\MODFLOW\*" -Destination "S:MODFLOW" -recurse -Force
