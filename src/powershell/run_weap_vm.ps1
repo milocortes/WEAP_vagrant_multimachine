@@ -1,3 +1,8 @@
+param($p1, $p2)
+
+$dim_exp_design = [int]($p1)
+$total_number_vm = [int]($p2)
+
 function valores_array($n,$total_mv,$mv){
 
    $chunk = [int][Math]::Floor($n/$total_mv)
@@ -20,7 +25,7 @@ function run_weap(){
 
   Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
 
-  $experimentos = valores_array 35 5 $vm
+  $experimentos = valores_array $dim_exp_design $total_number_vm $vm
   foreach($experimento in $experimentos){
       Write-Host "Run experiment : "$experimento
       Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
@@ -28,6 +33,14 @@ function run_weap(){
       Write-Host "Experiment "$experimento " finished"
       Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
 
+    Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+    Write-Host "-------   SEND EXPERIMENT DATA TO NFS STORAGE ------------"
+    Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
+
+    Copy-Item "C:\Users\vagrant\inputs\WEAP\*" -Destination "S:WEAP" -recurse -Force
+    Copy-Item "C:\Users\vagrant\inputs\MODFLOW\*" -Destination "S:MODFLOW" -recurse -Force
+    Remove-Item "C:\Users\vagrant\inputs\WEAP\*"  -recurse -Force
+    Remove-Item "C:\Users\vagrant\inputs\MODFLOW\*" -recurse -Force
   }
 }
 
@@ -45,9 +58,3 @@ Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
 run_weap
 
 
-Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
-Write-Host "-------   SEND DATA TO NFS STORAGE ------------"
-Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
-
-Copy-Item "C:\Users\vagrant\inputs\WEAP\*" -Destination "S:WEAP" -recurse -Force
-Copy-Item "C:\Users\vagrant\inputs\MODFLOW\*" -Destination "S:MODFLOW" -recurse -Force
