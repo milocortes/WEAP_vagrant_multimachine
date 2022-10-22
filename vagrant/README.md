@@ -25,6 +25,21 @@ Una vez creada la VM, accedemos y realizamos los siguientes pasos:
 	 # the Windows Remote Management service and its listener:
 	 winrm quickconfig
 	 ```
+* Incrementar el tamaño del disco duro de la máquina virtual:
+  * Por default, la box ```windows-10-1709-base-winrm``` está configurada con un disco de 40 Gb. El modelo WEAP necesita al menos 120 Gb para para su ejecución. 
+  * Para incrementar el tamaño del disco, en primer lugar se tiene que hacer una copia del disco en formato ```vmdk``` a formato ```vdi```. 
+  ```
+  .\VBoxManage clonemedium "C:\Users\hermi\VirtualBox VMs\v_windows_10_base\box-disk001.vmdk" "C:\Users\hermi\VirtualBox VMs\v_windows_10_base\box-disk001.vdi" --format vdi
+  ```
+  * Incrementamos el tamaño del disco ```vdi``` (120Gb * 1024Mb):
+  ```
+  .\VBoxManage modifymedium "C:\Users\hermi\VirtualBox VMs\v_windows_10_base\box-disk001.vdi" --resize 122880
+  ```  
+  * Asociamos el disco en formato ```vdi``` a la máquina virtual.
+  * Eliminamos el disco en formato ```vmdk```:
+  ```
+  rm "C:\Users\hermi\VirtualBox VMs\v_windows_10_base\box-disk001.vmdk" 
+  ```  
 
 
 ## Maquina virtual a box de Vagrant
