@@ -93,7 +93,7 @@ class LP_WEAP(object):
         policies["ID"] = range(policies.shape[0])
         policies = policies[["ID","Acciones","Activacion"]]
 
-        future = policies.merge(clima, how="cross")[["Acciones","Activacion","GCM"]].reset_index(drop=True)
+        future = policies.merge(self.clima, how="cross")[["Acciones","Activacion","GCM"]].reset_index(drop=True)
         future["ID"] = range(future.shape[0])
         future = future[["ID","Acciones","Activacion","GCM"]]
 
