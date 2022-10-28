@@ -88,6 +88,9 @@ class LP_WEAP(object):
         self.end_year = end_year
         self.output_path_WEAP = output_path_WEAP
         self.output_path_MODFLOW = output_path_MODFLOW
+        #self.path_WEAP = path_WEAP
+        #self.ZB = ZB
+        #sel.zones = zones
 
     def build_future_id_df(self):
         policies = self.acciones.merge(self.activaciones, how="cross")[["Acciones","Activacion"]].iloc[2:].reset_index(drop=True)
@@ -176,6 +179,8 @@ class LP_WEAP(object):
 
 
     def processing_MODFLOW(self, ruta_WEAP,ruta_export):
+    #def processing_MODFLOW(self):
+        
         ############################################################################
         ####                  PRE-PROCESSING MODFLOW RESULTS                    ####
         ####    COMENTARIO: La versión hace referencia al ID de la ejecución    ####
@@ -187,14 +192,16 @@ class LP_WEAP(object):
         print("-----------------------------------------")
     
         version = f'run_id_{self.action_id}'
-        ruta = ruta_export
+        ruta = self.output_path_MODFLOW #YA NO DEBERÍA IR
 
         # Se crea ruta según la versión
+        #dir_version = self.output_path_MODFLOW + '/' + version
         dir_version = ruta + '/' + version
         if not os.path.isdir(dir_version):
             os.mkdir(dir_version)
 
-        self.ZB = ['Zones.zbr', 'Zones_RL.zbr']
+        self.ZB = ['Zones.zbr', 'Zones_RL.zbr'] #ESTO NO DEBERIA IR
+        #ZB = self.ZB
 
         # COMPLETE BALANCE
         if __name__ == "__main__":
@@ -203,6 +210,7 @@ class LP_WEAP(object):
 
             for i in self.ZB:
                 # Creación de sub-carpetas para análisis separados
+                #directorio = self.output_path_MODFLOW + '/' + version + '/' + i[0:-4]
                 directorio = ruta + '/' + version + '/' + i[0:-4]
                 if not os.path.isdir(directorio):
                     os.mkdir(directorio)
@@ -214,12 +222,15 @@ class LP_WEAP(object):
                 # Variables
                 nombre_archivo_ZB = i
                 nombre_carpeta_MF = 'NWT_RDM_v22'
-                zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']  # Zone Budget Zones
+                zones = self.zones
+                #zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']  # Zone Budget Zones
                 aliases = {1: 'P01',2: 'P02',3: 'P03',4:'P07',5:'P08',6:'L01',7:'L02',8:'L05',9:'L06',10:'L09',11:'L10',12:'L12'} # Alias Zone Budget Zone
                     
                 path_salida = directorio
-                path_balance = ruta_WEAP + '/' + nombre_carpeta_MF
-                path_ZB = ruta + '/' + nombre_archivo_ZB
+                path_balance = os.path.join(self.path_WEAP,nombre_carpeta_MF)
+                #path_balance = ruta_WEAP + '/' + nombre_carpeta_MF
+                path_ZB = nombre_archivo_ZB
+                #path_ZB = ruta + '/' + nombre_archivo_ZB
                 temp_path = dir_temp
                 
                 # Ejecución funciones de Procesamiento
@@ -234,35 +245,43 @@ class LP_WEAP(object):
             pool.join()
 
         if __name__ == "__main__":
-            for i in ZB:
-                temp_path = ruta + '/' + version + '/' + i[0:-4] + '/temp'
+            for i in self.ZB:
+            #for i in ZB:
+                #temp_path = ruta + '/' + version + '/' + i[0:-4] + '/temp'
+                temp_path = os.path.join(self.output_path_MODFLOW, version, i[0:-4], temp)
                 # Elimina carpeta temporal
                 try:
                     os.rmdir(temp_path)
                 except OSError as e:
                     print("Error: %s: %s" % (temp_path, e.strerror))
 
-    def post_processing_MODFLOW(self, ruta_WEAP, ruta_export):
+    #def post_processing_MODFLOW(self, ruta_WEAP, ruta_export):
+    def post_processing_MODFLOW(self):
         ###################################################
         ####    POST - PROCESSING - MODFLOW RESULTS    ####
         ###################################################
 
         if __name__ == "__main__":
-                        
-            ruta_BALANCE_ZB = ruta_export + '/' + version + '/' + self.ZB[0][0:-4]
-            ruta_BALANCE_ZB_RL = ruta_export + '/' + version + '/' + self.ZB[1][0:-4]
 
-            ruta_export_BALANCE = ruta_export + '/' + version + '/BALANCE'
+            version = f'run_id_{self.action_id}'
+                        
+            #ruta_BALANCE_ZB = ruta_export + '/' + version + '/' + self.ZB[0][0:-4]
+            #ruta_BALANCE_ZB_RL = ruta_export + '/' + version + '/' + self.ZB[1][0:-4]
+            ruta_BALANCE_ZB = os.path.join(self.output_path_MODFLOW, version ,self.ZB[0][0:-4])
+            ruta_BALANCE_ZB_RL = os.path.join(self.output_path_MODFLOW, version, self.ZB[1][0:-4])
+            
+            ruta_export_BALANCE = self.output_path_MODFLOW + '/' + version + '/BALANCE'
+            #ruta_export_BALANCE = ruta_export + '/' + version + '/BALANCE'
             if not os.path.isdir(ruta_export_BALANCE):
                 os.mkdir(ruta_export_BALANCE)
 
             fecha = pd.read_csv('../datos/Fechas.csv')
             #años = pd.read_csv('../datos/Años.csv')
 
-            #años = años.query(f"Fecha <= {self.end_year}")
+            #años = años.query(f"Fecha <= {self.end_year}") ##NO VA
             fecha["anios"] = fecha["Fecha"].apply(lambda x: int(x[-4:]))
-            #fecha = fecha.query(f"anios <= {self.end_year}")
-            #anios = range(self.)
+            fecha = fecha.query(f"anios <= {self.end_year}")
+            anios = pd.DataFrame({'Fecha': range(self.start_year+2,self.end_year)})
 
             variables = ['Variacion Neta Flujo Interacuifero', 'Recarga desde río', 'Recarga Lateral', 'Recarga distribuida', 'Recarga', 'Variacion Neta Flujo Mar', 'Afloramiento - DRAIN', 
                         'Afloramiento - RIVER', 'Afloramiento total', 'Bombeos', 'Almacenamiento']
@@ -285,7 +304,8 @@ class LP_WEAP(object):
                 return Res_cuenca.to_excel(ruta_export_BALANCE + '/Resumen_balance_' + str(cuenca) + '.xlsx')
 
             # SERIES ANUALES - AÑO HIDROLÓGICO
-            for j in zones:
+            for j in self.zones:
+            #for j in zones:
                 Resumen = pd.DataFrame(columns = variables)
 
                 df = pd.read_csv(ruta_BALANCE_ZB + '/' + j + '.csv')
@@ -336,8 +356,12 @@ class LP_WEAP(object):
                         data_prom[m,n] = np.mean(Resumen[:,n][52*m:52*m+52])   
 
                 Res_anual = pd.DataFrame(data_prom, columns = variables)
-                Res_anual.set_index(años['Fecha'],inplace = True)
+                Res_anual.set_index(anios['Fecha'],inplace = True)
+                #Res_anual.set_index(años['Fecha'],inplace = True)
                 Res_anual.to_excel(ruta_export_BALANCE + '/Resumen_balance_' + str(j) + '.xlsx')
 
-            Petorca = get_balance_cuenca(0, 5, zones, variables, años, 'Petorca')
-            Ligua = get_balance_cuenca(5, 12, zones, variables, años, 'Ligua')
+            #Petorca = get_balance_cuenca(0, 5, zones, variables, años, 'Petorca')
+            #Ligua = get_balance_cuenca(5, 12, zones, variables, años, 'Ligua')
+
+            Petorca = get_balance_cuenca(0, 5, self.zones, variables, anios, 'Petorca')
+            Ligua = get_balance_cuenca(5, 12, self.zones, variables, anios, 'Ligua')
