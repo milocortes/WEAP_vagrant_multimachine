@@ -16,9 +16,9 @@ end_year = 1983
 output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
 output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
 
-#ZB = ['Zones.zbr', 'Zones_RL.zbr']
-#zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
-#path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
+ZB = ['Zones.zbr', 'Zones_RL.zbr']
+zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
+path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
 
 
 #### Inicializamos el modelo 
@@ -30,6 +30,9 @@ weap_model.build_future_id_df()
 
 #### Corremos el modelo
 weap_model.run_WEAP_model(88)
+
+weap_model.processing_MODFLOW()
+weap_model.post_processing_MODFLOW()
 
 #### Exportamos resultados de WEAP
 #ruta_WEAP = "C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"

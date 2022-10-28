@@ -2,7 +2,7 @@
 
 import pandas as pd
 import os
-from flopy.utils.zonbud import ZoneBudget, read_zbarray
+from flopy.utils.zonbud import ZoneBudget, read_zbarray # Se trabaja con versión flopy == 3.3.4
 from datetime import datetime as dt
 import glob
 import time
@@ -68,15 +68,15 @@ def get_full_balance(path_balance, path_ZB, dir_exit, temp_path, aliases, zones)
     for f in filelist:
         os.remove(os.path.join(temp_path, f))
 
-################################################
+######################################
 ####    Clase de procesamiento    ####
-################################################
-
+######################################
 
 class LP_WEAP(object):
     """docstring for ."""
 
-    def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW):
+    def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones):
+    #def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW):
         self.acciones = acciones
         self.activaciones = activaciones
         self.clima = clima
@@ -88,9 +88,9 @@ class LP_WEAP(object):
         self.end_year = end_year
         self.output_path_WEAP = output_path_WEAP
         self.output_path_MODFLOW = output_path_MODFLOW
-        #self.path_WEAP = path_WEAP
-        #self.ZB = ZB
-        #sel.zones = zones
+        self.path_WEAP = path_WEAP
+        self.ZB = ZB
+        self.zones = zones
 
     def build_future_id_df(self):
         policies = self.acciones.merge(self.activaciones, how="cross")[["Acciones","Activacion"]].iloc[2:].reset_index(drop=True)
@@ -118,9 +118,9 @@ class LP_WEAP(object):
 
         # Build Variable Branches
         acciones_2_agrupado = self.acciones_valores.groupby("Acciones")
-        print("----------------------")
-        print("******   CLIMA ********")
-        print("----------------------")
+        print("-------------------------")
+        print("******   CLIMA   ********")
+        print("-------------------------")
 
         gcm = self.future.iloc[action_id]["GCM"]
 
@@ -137,9 +137,9 @@ class LP_WEAP(object):
         WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"'Step( 1979,1,  2020,{delta_t_20_39},  2040,{delta_t_40_59})'"
         WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = f"'Step( 1979,1,  2020,{delta_p_20_39},  2040,{delta_p_40_59})'"
 
-        print("----------------------")
-        print("******   ACCIONES ********")
-        print("----------------------")
+        print("----------------------------")
+        print("******   ACCIONES   ********")
+        print("----------------------------")
 
         print(self.future.iloc[action_id]["Acciones"], self.future.iloc[action_id]["Activacion"], self.future.iloc[action_id]["GCM"])
         if self.future.iloc[action_id]["Acciones"] == "Sin implementacion de acciones":
@@ -161,15 +161,15 @@ class LP_WEAP(object):
                 #print(f"WEAP.BranchVariable({i}).Expression='2200'")
                 WEAP.BranchVariable(i).Expression='2200'
 
-        print("----------------------")
-        print("******   RUN MODEL ********")
-        print("----------------------")
+        print("-----------------------------")
+        print("******   RUN MODEL   ********")
+        print("-----------------------------")
 
         WEAP.Calculate()
 
         print("---------------------------------------")
-        print("******   EXPORT WEAP RESULTS  ********")
-        print("----------------------------------------")
+        print("******   EXPORT WEAP RESULTS   ********")
+        print("---------------------------------------")
 
         favorites = pd.read_excel("../datos/Favorites_WEAP.xlsx")
 
@@ -177,31 +177,30 @@ class LP_WEAP(object):
             WEAP.LoadFavorite(i)
             WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id}_{j}.csv"), True, True, True, False, False)
 
+    ############################################################################
+    ####                  PRE-PROCESSING MODFLOW RESULTS                    ####
+    ####    COMENTARIO: La versión hace referencia al ID de la ejecución    ####
+    ####                ruta_WEAP se especifica según la PC del usuario     ####
+    ############################################################################
 
-    def processing_MODFLOW(self, ruta_WEAP,ruta_export):
-    #def processing_MODFLOW(self):
+    #def processing_MODFLOW(self, ruta_WEAP,ruta_export):
+    def processing_MODFLOW(self):
         
-        ############################################################################
-        ####                  PRE-PROCESSING MODFLOW RESULTS                    ####
-        ####    COMENTARIO: La versión hace referencia al ID de la ejecución    ####
-        ####                ruta_WEAP se especifica según la PC del usuario     ####
-        ############################################################################
-
-        print("-----------------------------------------")
+        print("----------------------------------------")
         print("******  EXPORT MODFLOW RESULTS  ********")
-        print("-----------------------------------------")
+        print("----------------------------------------")
     
         version = f'run_id_{self.action_id}'
-        ruta = self.output_path_MODFLOW #YA NO DEBERÍA IR
+        #ruta = self.output_path_MODFLOW #YA NO DEBERÍA IR
 
         # Se crea ruta según la versión
-        #dir_version = self.output_path_MODFLOW + '/' + version
-        dir_version = ruta + '/' + version
+        dir_version = os.path.join(self.output_path_MODFLOW, version)
+        #dir_version = ruta + '/' + version
         if not os.path.isdir(dir_version):
             os.mkdir(dir_version)
 
-        self.ZB = ['Zones.zbr', 'Zones_RL.zbr'] #ESTO NO DEBERIA IR
-        #ZB = self.ZB
+        #self.ZB = ['Zones.zbr', 'Zones_RL.zbr'] #ESTO NO DEBERIA IR
+        ZB = self.ZB
 
         # COMPLETE BALANCE
         if __name__ == "__main__":
@@ -210,12 +209,13 @@ class LP_WEAP(object):
 
             for i in self.ZB:
                 # Creación de sub-carpetas para análisis separados
-                #directorio = self.output_path_MODFLOW + '/' + version + '/' + i[0:-4]
-                directorio = ruta + '/' + version + '/' + i[0:-4]
+                directorio = os.path.join(self.output_path_MODFLOW, version, i[0:-4])
+                #directorio = ruta + '/' + version + '/' + i[0:-4]
                 if not os.path.isdir(directorio):
                     os.mkdir(directorio)
 
-                dir_temp = directorio + '/temp'
+                dir_temp = os.path.join(directorio,'temp')
+                #dir_temp = directorio + '/temp'
                 if not os.path.isdir(dir_temp):
                     os.mkdir(dir_temp)
                 
@@ -248,7 +248,7 @@ class LP_WEAP(object):
             for i in self.ZB:
             #for i in ZB:
                 #temp_path = ruta + '/' + version + '/' + i[0:-4] + '/temp'
-                temp_path = os.path.join(self.output_path_MODFLOW, version, i[0:-4], temp)
+                temp_path = os.path.join(self.output_path_MODFLOW, version, i[0:-4], 'temp')
                 # Elimina carpeta temporal
                 try:
                     os.rmdir(temp_path)
