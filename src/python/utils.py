@@ -240,7 +240,7 @@ class LP_WEAP(object):
                 except OSError as e:
                     print("Error: %s: %s" % (temp_path, e.strerror))
 
-    def post_processing_MODFLOW(self, ruta_WEAP, ruta_export, anio_final):
+    def post_processing_MODFLOW(self, ruta_WEAP, ruta_export):
         ###################################################
         ####    POST - PROCESSING - MODFLOW RESULTS    ####
         ###################################################
@@ -257,9 +257,9 @@ class LP_WEAP(object):
             fecha = pd.read_csv('../datos/Fechas.csv')
             años = pd.read_csv('../datos/Años.csv')
 
-            años = años.query(f"Fecha <={anio_final}")
+            años = años.query(f"Fecha <= {self.end_year}")
             fecha["anios"] = fecha["Fecha"].apply(lambda x: int(x[-4:]))
-            fecha = fecha.query("anios <1985")
+            fecha = fecha.query(f"anios <= {self.end_year}")
 
             variables = ['Variacion Neta Flujo Interacuifero', 'Recarga desde río', 'Recarga Lateral', 'Recarga distribuida', 'Recarga', 'Variacion Neta Flujo Mar', 'Afloramiento - DRAIN', 
                         'Afloramiento - RIVER', 'Afloramiento total', 'Bombeos', 'Almacenamiento']
@@ -269,7 +269,7 @@ class LP_WEAP(object):
                 for i in df.columns.values[1:-2]:
                     df_ls[i] = pd.DataFrame((df[i].to_numpy())/86400)
                 df_ls.set_index(fecha['Fecha'],inplace = True)
-                df_temp = df_ls.iloc[117:2145,:]
+                df_temp = df_ls.iloc[117:-39,:]
                 return df_temp
 
             def get_balance_cuenca(inicio, fin, zones, variables, años, cuenca):
