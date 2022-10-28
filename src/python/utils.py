@@ -88,7 +88,7 @@ class LP_WEAP(object):
         self.end_year = end_year
 
     def build_future_id_df(self):
-        policies = acciones.merge(self.activaciones, how="cross")[["Acciones","Activacion"]].iloc[2:].reset_index(drop=True)
+        policies = self.acciones.merge(self.activaciones, how="cross")[["Acciones","Activacion"]].iloc[2:].reset_index(drop=True)
         policies.loc[0,"Activacion"] = 2200
         policies["ID"] = range(policies.shape[0])
         policies = policies[["ID","Acciones","Activacion"]]
