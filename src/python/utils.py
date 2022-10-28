@@ -8,7 +8,7 @@ import glob
 import time
 import multiprocessing as mp
 import numpy as np
-
+import win32com.client as win32
 
 ################################################
 ####    Funciones Procesar archivos .ccf    ####
