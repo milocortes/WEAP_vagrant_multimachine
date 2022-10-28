@@ -262,7 +262,7 @@ class LP_WEAP(object):
             #años = años.query(f"Fecha <= {self.end_year}")
             fecha["anios"] = fecha["Fecha"].apply(lambda x: int(x[-4:]))
             #fecha = fecha.query(f"anios <= {self.end_year}")
-            anios = range(self.)
+            #anios = range(self.)
 
             variables = ['Variacion Neta Flujo Interacuifero', 'Recarga desde río', 'Recarga Lateral', 'Recarga distribuida', 'Recarga', 'Variacion Neta Flujo Mar', 'Afloramiento - DRAIN', 
                         'Afloramiento - RIVER', 'Afloramiento total', 'Bombeos', 'Almacenamiento']

@@ -27,7 +27,7 @@ weap_model.build_future_id_df()
 weap_model.run_WEAP_model(88)
 
 #### Exportamos resultados de WEAP
-ruta_WEAP = "C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
-ruta_export = "C:\Users\hermi\OneDrive\Documents\egtp\ligua_petorca\WEAP_vagrant_multimachine\src\output\WEAP"
+#ruta_WEAP = "C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
+#ruta_export = "C:\Users\hermi\OneDrive\Documents\egtp\ligua_petorca\WEAP_vagrant_multimachine\src\output\WEAP"
 
-weap_model.processing_MODFLOW(ruta_WEAP, ruta_export)
+#weap_model.processing_MODFLOW(ruta_WEAP, ruta_export)
