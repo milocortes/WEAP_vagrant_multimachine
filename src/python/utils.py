@@ -76,7 +76,7 @@ def get_full_balance(path_balance, path_ZB, dir_exit, temp_path, aliases, zones)
 class LP_WEAP(object):
     """docstring for ."""
 
-    def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year):
+    def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW):
         self.acciones = acciones
         self.activaciones = activaciones
         self.clima = clima
@@ -86,6 +86,8 @@ class LP_WEAP(object):
         self.future_id_df = None
         self.start_year = start_year
         self.end_year = end_year
+        self.output_path_WEAP = output_path_WEAP
+        self.output_path_MODFLOW = output_path_MODFLOW
 
     def build_future_id_df(self):
         policies = self.acciones.merge(self.activaciones, how="cross")[["Acciones","Activacion"]].iloc[2:].reset_index(drop=True)
@@ -170,7 +172,7 @@ class LP_WEAP(object):
 
         for i,j in zip(favorites["BranchVariable"],favorites["WEAP Export"]):
             WEAP.LoadFavorite(i)
-            WEAP.ExportResults(f"../output/WEAP/run_id_{action_id}_{j}.csv", True, True, True, False, False)
+            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id}_{j}.csv"), True, True, True, False, False)
 
 
     def processing_MODFLOW(self, ruta_WEAP,ruta_export):
@@ -255,11 +257,12 @@ class LP_WEAP(object):
                 os.mkdir(ruta_export_BALANCE)
 
             fecha = pd.read_csv('../datos/Fechas.csv')
-            años = pd.read_csv('../datos/Años.csv')
+            #años = pd.read_csv('../datos/Años.csv')
 
-            años = años.query(f"Fecha <= {self.end_year}")
+            #años = años.query(f"Fecha <= {self.end_year}")
             fecha["anios"] = fecha["Fecha"].apply(lambda x: int(x[-4:]))
-            fecha = fecha.query(f"anios <= {self.end_year}")
+            #fecha = fecha.query(f"anios <= {self.end_year}")
+            anios = range(self.)
 
             variables = ['Variacion Neta Flujo Interacuifero', 'Recarga desde río', 'Recarga Lateral', 'Recarga distribuida', 'Recarga', 'Variacion Neta Flujo Mar', 'Afloramiento - DRAIN', 
                         'Afloramiento - RIVER', 'Afloramiento total', 'Bombeos', 'Almacenamiento']
