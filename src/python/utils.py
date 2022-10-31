@@ -368,7 +368,7 @@ class LP_WEAP(object):
         Petorca = get_balance_cuenca(0, 5, self.zones, variables, anios, 'Petorca')
         Ligua = get_balance_cuenca(5, 12, self.zones, variables, anios, 'Ligua')
 
-
+"""
 class Processing_MODFLOW:
     def __init__(self, action_id, output_path_MODFLOW, ZB, zones, path_WEAP):
         self.action_id = action_id
@@ -566,3 +566,4 @@ class Processing_MODFLOW:
 
             Petorca = get_balance_cuenca(0, 5, self.zones, variables, anios, 'Petorca')
             Ligua = get_balance_cuenca(5, 12, self.zones, variables, anios, 'Ligua')
+"""
