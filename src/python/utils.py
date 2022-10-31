@@ -114,7 +114,7 @@ class LP_WEAP(object):
         # Open WEAP sesion
         WEAP = win32.Dispatch("WEAP.WEAPApplication")
         WEAP.ActiveArea = "Ligua_Petorca_WEAP_MODFLOW_RDM"
-        WEAP.ActiveScenario = WEAP.Scenarios("Reference")
+        WEAP.ActiveScenario = WEAP.Scenarios("Current Accounts")
         WEAP.BaseYear = self.start_year
         WEAP.EndYear = self.end_year
 
@@ -126,25 +126,23 @@ class LP_WEAP(object):
 
         gcm = self.future.iloc[action_id]["GCM"]
 
-        delta_t_20_39 = self.clima_valores.query(f"GCM=='{gcm}'")['Delta T | 20-39'].values[0]
-        delta_t_40_59 = self.clima_valores.query(f"GCM=='{gcm}'")['Delta T | 40-59'].values[0]
-        delta_p_20_39 = (100 + self.clima_valores.query(f"GCM=='{gcm}'")['Delta P | 20-39'].values[0])/100
-        delta_p_40_59 = (100 + self.clima_valores.query(f"GCM=='{gcm}'")['Delta P | 40-59'].values[0])/100
+        delta_t_20_39 = round(self.clima_valores.query(f"GCM=='{gcm}'")['Delta T | 20-39'].values[0],2)
+        delta_t_40_59 = round(self.clima_valores.query(f"GCM=='{gcm}'")['Delta T | 40-59'].values[0],2)
+        delta_p_20_39 = round((100 + self.clima_valores.query(f"GCM=='{gcm}'")['Delta P | 20-39'].values[0])/100,2)
+        delta_p_40_59 = round((100 + self.clima_valores.query(f"GCM=='{gcm}'")['Delta P | 40-59'].values[0])/100,2)
 
         """
         print(f"WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = 'Step( 1979,1,  2020,{delta_t_20_39},  2040,{delta_t_40_59} )'")
         print(f"WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = 'Step( 1979,1,  2020,{delta_p_20_39},  2040,{delta_p_40_59} )'")
         """
-        WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"'Step(1980,{delta_t_20_39},  1983,{delta_t_40_59})'"
-        WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = f"'Step(1980,{delta_p_20_39},  1983,{delta_p_40_59})'"
-
-        #WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"'Step( 1979,0,  1980,{delta_t_20_39},  1983,{delta_t_40_59})'"
-        #WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = f"'Step( 1979,1,  1980,{delta_p_20_39},  1983,{delta_p_40_59})'"
+        WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"'Step( 1979,0,  1980,{delta_t_20_39},  1983,{delta_t_40_59})'"
+        WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = f"'Step( 1979,1,  1980,{delta_p_20_39},  1983,{delta_p_40_59})'"
         #2020, 2040
 
         print("----------------------------")
         print("******   ACCIONES   ********")
         print("----------------------------")
+        WEAP.ActiveScenario = WEAP.Scenarios("Reference")
 
         print(self.future.iloc[action_id]["Acciones"], self.future.iloc[action_id]["Activacion"], self.future.iloc[action_id]["GCM"])
         if self.future.iloc[action_id]["Acciones"] == "Sin implementacion de acciones":
