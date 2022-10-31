@@ -75,11 +75,12 @@ def get_full_balance(path_balance, path_ZB, dir_exit, temp_path, aliases, zones)
 class LP_WEAP(object):
     """docstring for ."""
 
-    def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones):
+    def __init__(self,acciones, activaciones, clima, demanda, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones):
     #def __init__(self,acciones, activaciones, clima, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW):
         self.acciones = acciones
         self.activaciones = activaciones
         self.clima = clima
+        self.demanda = demanda
         self.acciones_valores = acciones_valores
         self.clima_valores = clima_valores
         self.policies = None
@@ -99,8 +100,9 @@ class LP_WEAP(object):
         policies = policies[["ID","Acciones","Activacion"]]
 
         future = policies.merge(self.clima, how="cross")[["Acciones","Activacion","GCM"]].reset_index(drop=True)
+        future = future.merge(self.demanda, how = "cross")[["Acciones","Activacion","GCM","Demanda"]].reset_index(drop=True)
         future["ID"] = range(future.shape[0])
-        future = future[["ID","Acciones","Activacion","GCM"]]
+        future = future[["ID","Acciones","Activacion","GCM","Demanda"]]
 
         self.policies = policies
         self.future = future
