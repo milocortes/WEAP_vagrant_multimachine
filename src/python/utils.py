@@ -134,7 +134,7 @@ class LP_WEAP(object):
         print(f"WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = 'Step( 1979,1,  2020,{delta_p_20_39},  2040,{delta_p_40_59} )'")
         """
 
-        WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"'Step( 1979,1,  2020,{delta_t_20_39},  2040,{delta_t_40_59})'"
+        WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"'Step( 1979,0,  2020,{delta_t_20_39},  2040,{delta_t_40_59})'"
         WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = f"'Step( 1979,1,  2020,{delta_p_20_39},  2040,{delta_p_40_59})'"
 
         print("----------------------------")
