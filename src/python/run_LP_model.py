@@ -31,8 +31,9 @@ weap_model.build_future_id_df()
 #### Corremos el modelo
 weap_model.run_WEAP_model(88)
 
-weap_model.processing_MODFLOW()
-weap_model.post_processing_MODFLOW()
+if __name__ == "__main__":
+    weap_model.processing_MODFLOW()
+    weap_model.post_processing_MODFLOW()
 
 #### Exportamos resultados de WEAP
 #ruta_WEAP = "C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
