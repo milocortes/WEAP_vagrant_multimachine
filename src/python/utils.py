@@ -352,9 +352,9 @@ class LP_WEAP(object):
             Resumen.loc[:,'Almacenamiento'] = -(df_temp['FROM_STORAGE'].to_numpy() - df_temp['TO_STORAGE'].to_numpy())
 
             Resumen = Resumen.to_numpy()
-            data_prom = np.zeros((39,11))
+            data_prom = np.zeros((len(anios),11))
             for n in range(0,11):
-                for m in range(0,39):
+                for m in range(0,len(anios)):
                     data_prom[m,n] = np.mean(Resumen[:,n][52*m:52*m+52])   
 
             Res_anual = pd.DataFrame(data_prom, columns = variables)
