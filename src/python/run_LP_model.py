@@ -1,5 +1,8 @@
 import pandas as pd
 from utils import *
+import warnings
+
+warnings.filterwarnings('ignore')
 
 if __name__ == "__main__":
 #### Cargamos datos
@@ -12,7 +15,7 @@ if __name__ == "__main__":
     clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
 
     start_year = 1979
-    end_year = 1982
+    end_year = 2059
 
     output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
     output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
@@ -30,7 +33,7 @@ if __name__ == "__main__":
     weap_model.build_future_id_df()
 
     #### Corremos el modelo
-    weap_model.run_WEAP_model(155)
+    weap_model.run_WEAP_model(105)
 
     weap_model.processing_MODFLOW()
     weap_model.post_processing_MODFLOW()
