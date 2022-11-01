@@ -12,7 +12,7 @@ acciones_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Ac
 clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
 
 start_year = 1979
-end_year = 1983
+end_year = 2059
 
 output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
 output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
@@ -30,7 +30,7 @@ weap_model = LP_WEAP(acciones, activaciones, clima, demanda, acciones_valores,
 weap_model.build_future_id_df()
 
 #### Corremos el modelo
-weap_model.run_WEAP_model(88)
+weap_model.run_WEAP_model(130)
 
 if __name__ == "__main__":
     weap_model.processing_MODFLOW()
