@@ -1,9 +1,13 @@
 import pandas as pd
+import sys
 from utils import *
 import warnings
 warnings.filterwarnings('ignore')
 
 if __name__ == "__main__":
+
+    ## Recibe run_in
+    run_id = int(sys.argv[1]) - 1
 #### Cargamos datos
     acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
     activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Activacion")
@@ -31,7 +35,7 @@ if __name__ == "__main__":
     weap_model.build_future_id_df()
 
     #### Corremos el modelo
-    weap_model.run_WEAP_model(105)
+    weap_model.run_WEAP_model(run_id)
 
     #### Procesamiento MODFLOW
     weap_model.processing_MODFLOW()

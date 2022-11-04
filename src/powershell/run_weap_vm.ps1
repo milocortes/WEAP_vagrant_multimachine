@@ -29,7 +29,7 @@ function run_weap(){
   foreach($experimento in $experimentos){
       Write-Host "Run experiment : "$experimento
       Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
-      python 2_EjecucionEscenarios_RDM_parameter.py $experimento
+      python run_LP_model.py $experimento
       Write-Host "Experiment "$experimento " finished"
       Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
 
@@ -37,13 +37,12 @@ function run_weap(){
     Write-Host "-------   SEND EXPERIMENT DATA TO NFS STORAGE ------------"
     Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
 
-    Copy-Item "C:\Users\vagrant\inputs\WEAP\*" -Destination "S:WEAP" -recurse -Force
-    Copy-Item "C:\Users\vagrant\inputs\MODFLOW\*" -Destination "S:MODFLOW" -recurse -Force
-    Remove-Item "C:\Users\vagrant\inputs\WEAP\*"  -recurse -Force
-    Remove-Item "C:\Users\vagrant\inputs\MODFLOW\*" -recurse -Force
+    Copy-Item "C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP\*" -Destination "S:WEAP" -recurse -Force
+    Copy-Item "C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW\*"  -Destination "S:MODFLOW" -recurse -Force
+    Remove-Item "C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP\*"  -recurse -Force
+    Remove-Item "C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW\*" -recurse -Force
   }
 }
-
 
 Write-Host "*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*"
 Write-Host "------------   Mount NFS service --------------"
