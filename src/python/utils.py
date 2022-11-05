@@ -245,7 +245,7 @@ class LP_WEAP(object):
         ruta_BALANCE_ZB = os.path.join(self.output_path_MODFLOW, version ,self.ZB[0][0:-4])
         ruta_BALANCE_ZB_RL = os.path.join(self.output_path_MODFLOW, version, self.ZB[1][0:-4])
         
-        ruta_export_BALANCE = self.output_path_MODFLOW + '/' + version + '/BALANCE'
+        ruta_export_BALANCE = os.path.join(self.output_path_MODFLOW, version, 'BALANCE')
         if not os.path.isdir(ruta_export_BALANCE):
             os.mkdir(ruta_export_BALANCE)
 
@@ -268,20 +268,20 @@ class LP_WEAP(object):
             return df_temp
 
         def get_balance_cuenca(inicio, fin, zones, variables, años, cuenca):
-            Res = (pd.read_excel(ruta_export_BALANCE + '/Resumen_balance_' + str(zones[inicio]) + '.xlsx').iloc[:,1:12]).to_numpy()
+            Res = (pd.read_excel(os.path.join(ruta_export_BALANCE, 'Resumen_balance_' + str(zones[inicio]) + '.xlsx')).iloc[:,1:12]).to_numpy()
             for q in range (inicio + 1,fin):
-                dato = (pd.read_excel(ruta_export_BALANCE + '/Resumen_balance_' + str(zones[q]) + '.xlsx').iloc[:,1:12]).to_numpy()
+                dato = (pd.read_excel(os.path.join(ruta_export_BALANCE, 'Resumen_balance_' + str(zones[q]) + '.xlsx')).iloc[:,1:12]).to_numpy()
                 Res = Res + dato
             Res_cuenca = pd.DataFrame(Res, columns = variables)
             Res_cuenca.set_index(años['Fecha'],inplace = True)
-            return Res_cuenca.to_excel(ruta_export_BALANCE + '/Resumen_balance_' + str(cuenca) + '.xlsx')
+            return Res_cuenca.to_excel(os.path.join(ruta_export_BALANCE, 'Resumen_balance_' + str(cuenca) + '.xlsx'))
 
         # SERIES ANUALES - AÑO HIDROLÓGICO
         for j in self.zones:
             Resumen = pd.DataFrame(columns = variables)
 
-            df = pd.read_csv(ruta_BALANCE_ZB + '/' + j + '.csv')
-            df_RL = pd.read_csv(ruta_BALANCE_ZB_RL + '/' + j + '.csv')
+            df = pd.read_csv(os.path.join(ruta_BALANCE_ZB, j + '.csv'))
+            df_RL = pd.read_csv(os.path.join(ruta_BALANCE_ZB_RL, j + '.csv'))
         
             df_temp = get_df_ls(df, fecha)
             df_RL_temp = get_df_ls(df_RL, fecha)
@@ -329,7 +329,7 @@ class LP_WEAP(object):
 
             Res_anual = pd.DataFrame(data_prom, columns = variables)
             Res_anual.set_index(anios['Fecha'],inplace = True)
-            Res_anual.to_excel(ruta_export_BALANCE + '/Resumen_balance_' + str(j) + '.xlsx')
+            Res_anual.to_excel(os.path.join(ruta_export_BALANCE,'Resumen_balance_' + str(j) + '.xlsx'))
 
         Petorca = get_balance_cuenca(0, 5, self.zones, variables, anios, 'Petorca')
         Ligua = get_balance_cuenca(5, 12, self.zones, variables, anios, 'Ligua')
