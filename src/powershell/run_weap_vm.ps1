@@ -4,7 +4,7 @@ $dim_exp_design = [int]($p1)
 $total_number_vm = [int]($p2)
 
 function valores_array($n,$total_mv,$mv){
-
+   $mv = $mv - 1
    $chunk = [int][Math]::Floor($n/$total_mv)
 
    $rango_inicio = $chunk*($mv-1) + 1
