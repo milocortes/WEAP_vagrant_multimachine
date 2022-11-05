@@ -8,6 +8,12 @@ if __name__ == "__main__":
 
     ## Recibe run_in
     run_id = int(sys.argv[1]) - 1
+
+    ## Guarda en el archivo log la ejecución en curso
+    file_object = open("log_execution.txt", 'a')
+    file_object.write(f"{run_id}\n")
+    file_object.close()
+    
 #### Cargamos datos
     acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
     activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Activacion")
