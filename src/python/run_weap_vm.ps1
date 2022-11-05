@@ -29,7 +29,7 @@ function run_weap(){
   foreach($experimento in $experimentos){
       Write-Host "Run experiment : "$experimento
       Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
-      python C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\python\run_LP_model.py $experimento
+      python run_LP_model.py $experimento
       Write-Host "Experiment "$experimento " finished"
       Get-Date -Format "dddd MM/dd/yyyy HH:mm K"
 
