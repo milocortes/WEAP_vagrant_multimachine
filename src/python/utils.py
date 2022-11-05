@@ -57,7 +57,8 @@ def get_full_balance(path_balance, path_ZB, dir_exit, temp_path, aliases, zones)
         filename = os.fsdecode(file)
         if filename.endswith(".ccf"):
             t = temp_path + '/' + filename[:-4] + '.csv'
-            zb = ZoneBudget(path_balance + '\\' + filename, zonefile, aliases=aliases)
+            #zb = ZoneBudget(path_balance + '\\' + filename, zonefile, aliases=aliases)
+            zb = ZoneBudget(os.path.join(path_balance, filename), zonefile, aliases=aliases)
             zb.to_csv(t)
             
     zones = zones
