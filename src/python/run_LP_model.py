@@ -18,7 +18,7 @@ if __name__ == "__main__":
     clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
 
     start_year = 1979
-    end_year = 2059
+    end_year = 1983 ###
 
     output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
     output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
