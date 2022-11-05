@@ -13,7 +13,7 @@ if __name__ == "__main__":
     file_object = open("log_execution.txt", 'a')
     file_object.write(f"{run_id}\n")
     file_object.close()
-    
+
 #### Cargamos datos
     acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
     activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Activacion")
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
 
     start_year = 1979
-    end_year = 1983 ###
+    end_year = 2050 ###
 
     output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
     output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
