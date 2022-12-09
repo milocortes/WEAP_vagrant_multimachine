@@ -76,14 +76,11 @@ def get_full_balance(path_balance, path_ZB, dir_exit, temp_path, aliases, zones)
 class LP_WEAP(object):
     """docstring for ."""
 
-    def __init__(self,acciones, activaciones, clima, demanda, acciones_valores, clima_valores, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones):
-        self.acciones = acciones
-        self.activaciones = activaciones
+    def __init__(self,clima, demanda, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores):
         self.clima = clima
         self.demanda = demanda
-        self.acciones_valores = acciones_valores
-        self.clima_valores = clima_valores
-        self.policies = None
+        self.demanda_valores = demanda_valores
+        #self.policies = None
         self.future_id_df = None
         self.start_year = start_year
         self.end_year = end_year
@@ -92,28 +89,17 @@ class LP_WEAP(object):
         self.path_WEAP = path_WEAP
         self.ZB = ZB
         self.zones = zones
+        self.ZR = ZR
+        self.Sc = Sc
 
     def build_future_id_df(self):
-        policies = self.acciones.merge(self.activaciones, how="cross")[["Acciones","Activacion"]].iloc[2:].reset_index(drop=True)
-        policies.loc[0,"Activacion"] = 2200
-        policies["ID"] = range(policies.shape[0])
-        policies = policies[["ID","Acciones","Activacion"]]
-
-        future = policies.merge(self.clima, how="cross")[["Acciones","Activacion","GCM"]].reset_index(drop=True)
-        future = future.merge(self.demanda, how = "cross")[["Acciones","Activacion","GCM","Demanda"]].reset_index(drop=True)
-        future["ID"] = range(future.shape[0])
-        future = future[["ID","Acciones","Activacion","GCM","Demanda"]]
-
-        self.policies = policies
-        self.future = future
-
-    def build_future_2_id_df(self):
         clima = self.clima
         future = clima.merge(self.demanda, how = "cross")[["GCM","Demanda"]].reset_index(drop=True)
         future["ID"] = range(future.shape[0])
         future = future[["ID", "GCM","Demanda"]]
 
         self.future = future
+        future.to_csv('RunIDs.csv')
         print(future)
 
     def run_WEAP_model(self, action_id):
@@ -127,46 +113,53 @@ class LP_WEAP(object):
         WEAP.EndYear = self.end_year
 
         # Build Variable Branches
-        acciones_2_agrupado = self.acciones_valores.groupby("Acciones")
         print("-------------------------")
         print("******   CLIMA   ********")
         print("-------------------------")
 
         gcm = self.future.iloc[action_id]["GCM"]
 
-        delta_t_20_39 = round(self.clima_valores.query(f"GCM=='{gcm}'")['Delta T | 20-39'].values[0],2)
-        delta_t_40_59 = round(self.clima_valores.query(f"GCM=='{gcm}'")['Delta T | 40-59'].values[0],2)
-        delta_p_20_39 = round((100 + self.clima_valores.query(f"GCM=='{gcm}'")['Delta P | 20-39'].values[0])/100,2)
-        delta_p_40_59 = round((100 + self.clima_valores.query(f"GCM=='{gcm}'")['Delta P | 40-59'].values[0])/100,2)
+        for k in self.ZR:
+            Branch_ZR_P = "\\Demand Sites and Catchments\\" + str(k) + ":Precipitation"
+            Branch_ZR_MinT = "\\Demand Sites and Catchments\\" + str(k) + ":Min Temperature"
+            Branch_ZR_MaxT = "\\Demand Sites and Catchments\\" + str(k) + ":Max Temperature"
+            if gcm == 'Clima historico':
+                RF_ZR_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Agro_LPQ_Corregida.csv, "' + str(k) +'", , Average, , Interpolate)'                
+                RF_ZR_MinT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmin_Agro_LPQ.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\' + str(k)
+                RF_ZR_MaxT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmax_Agro_LPQ.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\' + str(k)
+            else:
+                RF_ZR_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "' + str(k) +'", , Average, , Interpolate)'
+                RF_ZR_MinT = 'ReadFromFile(Datos\GCMs\\tasmin_LPQ_' + gcm + '.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\' + str(k)
+                RF_ZR_MaxT = 'ReadFromFile(Datos\GCMs\\tasmax_LPQ_' + gcm + '.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\' + str(k)
 
-        WEAP.Branch('\\Key Assumptions\\CC\\DeltaT').Variables(1).Expression = f"Step( 1979,0,  2020,{delta_t_20_39},  2040,{delta_t_40_59})"
-        WEAP.Branch('\\Key Assumptions\\CC\\DeltaP').Variables(1).Expression = f"Step( 1979,1,  2020,{delta_p_20_39},  2040,{delta_p_40_59})"
+            WEAP.BranchVariable(Branch_ZR_P).Expression = RF_ZR_P # Precipitation
+            WEAP.BranchVariable(Branch_ZR_MinT).Expression = RF_ZR_MinT # Min Temperature
+            WEAP.BranchVariable(Branch_ZR_MaxT).Expression = RF_ZR_MaxT # Max Temperature
+            #print(Branch_ZR_P, RF_ZR_P)
 
-        print("----------------------------")
-        print("******   ACCIONES   ********")
-        print("----------------------------")
-        WEAP.ActiveScenario = WEAP.Scenarios("Reference")
+        for m in self.Sc:
+            Branch_Sc_P = '\\Key Assumptions\\Series SMM\\PP\\' + str(m)
+            Branch_Sc_T = '\\Key Assumptions\\Series SMM\T\\' + str(m)
+            if gcm == 'Clima historico':
+                RF_Sc_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Subc_LPQ_Corregida.csv, "Subcuenca_' +str(m) + '", , Sum, , Replace)*PP'
+                RF_Sc_T = 'ReadFromFile(Datos\\variables climaticas LPQ\\t2m_Subc_LPQ.csv, "Subcuenca_' + str(m) + '", , Average, , Replace)'
+            else:
+                RF_Sc_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "Subcuenca_' +str(m) + '", , Sum, , Replace)*PP'
+                RF_Sc_T = 'ReadFromFile(Datos\GCMs\\tas_LPQ_' + gcm + '.csv, "Subcuenca_' + str(m) + '", , Average, , Replace)'
+            WEAP.Branch(Branch_Sc_P).Variables(1).Expression = RF_Sc_P # Precipitation
+            WEAP.Branch(Branch_Sc_T).Variables(1).Expression = RF_Sc_T # Temperature
 
-        print(self.future.iloc[action_id]["Acciones"], self.future.iloc[action_id]["Activacion"], self.future.iloc[action_id]["GCM"])
-        if self.future.iloc[action_id]["Acciones"] == "Sin implementacion de acciones":
-            for i in self.acciones_valores["BranchVariable"]:
-                WEAP.BranchVariable(i).Expression='2200'
-        else:
-            ac =  self.future.iloc[action_id]["Acciones"]
-            anio_activacion = self.future.iloc[action_id]["Activacion"]
+        print("---------------------------")
+        print("******   DEMANDA   ********")
+        print("---------------------------")
 
-            for i in acciones_2_agrupado.get_group(ac)["BranchVariable"]:
-                WEAP.BranchVariable(i).Expression=f"{anio_activacion}"
+        demand = self.future.iloc[action_id]["Demanda"]
 
-            acciones_2_agrupado_index = list(acciones_2_agrupado.get_group(ac).index)
-            sin_cambios = list(set(list(self.acciones_valores.index)).symmetric_difference(acciones_2_agrupado_index))
+        delta_riego = round(self.demanda_valores.query(f"Demanda=='{demand}'")['AreasRiego'].values[0],2)
+        delta_poblacion = round(self.demanda_valores.query(f"Demanda=='{demand}'")['Poblacion'].values[0],2)
 
-            for i in self.acciones_valores.iloc[sin_cambios]["BranchVariable"]:
-                WEAP.BranchVariable(i).Expression='2200'
-
-        print("-----------------------------")
-        print("******   RUN MODEL   ********")
-        print("-----------------------------")
+        WEAP.Branch('\\Key Assumptions\\VariacionAreasRiego').Variables(1).Expression = f"Step( 1979,1,  2021,{delta_riego})"
+        WEAP.Branch('\\Key Assumptions\\VariacionPoblacion').Variables(1).Expression = f"Step( 1979,1,  2021,{delta_poblacion})"
 
         WEAP.Calculate()
 
@@ -343,3 +336,5 @@ class LP_WEAP(object):
 
         Petorca = get_balance_cuenca(0, 5, self.zones, variables, anios, 'Petorca')
         Ligua = get_balance_cuenca(5, 12, self.zones, variables, anios, 'Ligua')
+
+        

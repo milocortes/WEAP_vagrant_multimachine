@@ -23,16 +23,12 @@ if not all_lines:
         file_object.close()
         
         #### Cargamos datos
-        acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
-        activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Activacion")
         clima = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima")
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
-
-        acciones_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones2")
-        clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
+        demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
         start_year = 1979
-        end_year = 2059 ###
+        end_year = 2060 ###
 
         output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
         output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
@@ -40,10 +36,10 @@ if not all_lines:
         ZB = ['Zones.zbr', 'Zones_RL.zbr']
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
-
+        ZR = ['Agricola_L05', 'Agricola_L06', 'Agricola_L07', 'Agricola_L08', 'Agricola_L09', 'Agricola_L10', 'Agricola_P02', 'Agricola_P05', 'Agricola_P06', 'Agricola_P07', 'Agricola_P08']
+        Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
         #### Inicializamos el modelo 
-        weap_model = LP_WEAP(acciones, activaciones, clima, demanda, acciones_valores, 
-                            clima_valores, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones)
+        weap_model = LP_WEAP(clima, demanda,start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
 
         #### Generamos el data frame de futuros
         weap_model.build_future_id_df()
@@ -52,8 +48,8 @@ if not all_lines:
         weap_model.run_WEAP_model(run_id)
 
         #### Procesamiento MODFLOW
-        weap_model.processing_MODFLOW()
-        weap_model.post_processing_MODFLOW()    
+        #weap_model.processing_MODFLOW()
+        #weap_model.post_processing_MODFLOW()    
 
 ## Verificamos si el experimento ya fue ejecutado
 elif str(run_id) in all_lines[:-1]:
@@ -66,13 +62,9 @@ elif  str(run_id) == all_lines[-1]:
     if __name__ == "__main__":
 
         #### Cargamos datos
-        acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
-        activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Activacion")
         clima = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima")
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
-
-        acciones_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones2")
-        clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
+        demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
         start_year = 1979
         end_year = 2059 ###
@@ -83,10 +75,11 @@ elif  str(run_id) == all_lines[-1]:
         ZB = ['Zones.zbr', 'Zones_RL.zbr']
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
+        ZR = ['Agricola_L05', 'Agricola_L06', 'Agricola_L07', 'Agricola_L08', 'Agricola_L09', 'Agricola_L10', 'Agricola_P02', 'Agricola_P05', 'Agricola_P06', 'Agricola_P07', 'Agricola_P08']
+        Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
 
         #### Inicializamos el modelo 
-        weap_model = LP_WEAP(acciones, activaciones, clima, demanda, acciones_valores, 
-                            clima_valores, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones)
+        weap_model = LP_WEAP(clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
 
         #### Generamos el data frame de futuros
         weap_model.build_future_id_df()
@@ -95,8 +88,8 @@ elif  str(run_id) == all_lines[-1]:
         weap_model.run_WEAP_model(run_id)
 
         #### Procesamiento MODFLOW
-        weap_model.processing_MODFLOW()
-        weap_model.post_processing_MODFLOW()
+        #weap_model.processing_MODFLOW()
+        #weap_model.post_processing_MODFLOW()
 
 ## Ejecutamos el nuevo experimento
 else:
@@ -109,13 +102,9 @@ else:
         file_object.close()
 
         #### Cargamos datos
-        acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
-        activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Activacion")
         clima = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima")
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
-
-        acciones_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones2")
-        clima_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima2")
+        demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
         start_year = 1979
         end_year = 2059 ###
@@ -126,10 +115,11 @@ else:
         ZB = ['Zones.zbr', 'Zones_RL.zbr']
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
+        ZR = ['Agricola_L05', 'Agricola_L06', 'Agricola_L07', 'Agricola_L08', 'Agricola_L09', 'Agricola_L10', 'Agricola_P02', 'Agricola_P05', 'Agricola_P06', 'Agricola_P07', 'Agricola_P08']
+        Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
 
         #### Inicializamos el modelo 
-        weap_model = LP_WEAP(acciones, activaciones, clima, demanda, acciones_valores, 
-                            clima_valores, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones)
+        weap_model = LP_WEAP(clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
 
         #### Generamos el data frame de futuros
         weap_model.build_future_id_df()
@@ -138,5 +128,5 @@ else:
         weap_model.run_WEAP_model(run_id)
 
         #### Procesamiento MODFLOW
-        weap_model.processing_MODFLOW()
-        weap_model.post_processing_MODFLOW()
+        #weap_model.processing_MODFLOW()
+        #weap_model.post_processing_MODFLOW()

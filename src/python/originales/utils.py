@@ -107,15 +107,6 @@ class LP_WEAP(object):
         self.policies = policies
         self.future = future
 
-    def build_future_2_id_df(self):
-        clima = self.clima
-        future = clima.merge(self.demanda, how = "cross")[["GCM","Demanda"]].reset_index(drop=True)
-        future["ID"] = range(future.shape[0])
-        future = future[["ID", "GCM","Demanda"]]
-
-        self.future = future
-        print(future)
-
     def run_WEAP_model(self, action_id):
         self.action_id = action_id
 
