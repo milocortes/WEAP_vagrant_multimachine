@@ -7,7 +7,6 @@ warnings.filterwarnings('ignore')
 ## Recibe run_in
 run_id = int(sys.argv[1]) - 1
 
-
 all_lines = []
 with open('log_execution.txt') as f:
     for line in f:
@@ -48,8 +47,8 @@ if not all_lines:
         weap_model.run_WEAP_model(run_id)
 
         #### Procesamiento MODFLOW
-        #weap_model.processing_MODFLOW()
-        #weap_model.post_processing_MODFLOW()    
+        weap_model.processing_MODFLOW()
+        weap_model.post_processing_MODFLOW()    
 
 ## Verificamos si el experimento ya fue ejecutado
 elif str(run_id) in all_lines[:-1]:
@@ -88,8 +87,8 @@ elif  str(run_id) == all_lines[-1]:
         weap_model.run_WEAP_model(run_id)
 
         #### Procesamiento MODFLOW
-        #weap_model.processing_MODFLOW()
-        #weap_model.post_processing_MODFLOW()
+        weap_model.processing_MODFLOW()
+        weap_model.post_processing_MODFLOW()
 
 ## Ejecutamos el nuevo experimento
 else:
@@ -128,5 +127,5 @@ else:
         weap_model.run_WEAP_model(run_id)
 
         #### Procesamiento MODFLOW
-        #weap_model.processing_MODFLOW()
-        #weap_model.post_processing_MODFLOW()
+        weap_model.processing_MODFLOW()
+        weap_model.post_processing_MODFLOW()
