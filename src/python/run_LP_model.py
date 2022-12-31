@@ -61,6 +61,8 @@ elif  str(run_id) == all_lines[-1]:
     if __name__ == "__main__":
 
         #### Cargamos datos
+        acciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones")
+        activaciones = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Acciones2")
         clima = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima")
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
         demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
@@ -78,7 +80,7 @@ elif  str(run_id) == all_lines[-1]:
         Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
 
         #### Inicializamos el modelo 
-        weap_model = LP_WEAP(clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
+        weap_model = LP_WEAP(acciones, activaciones, clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
 
         #### Generamos el data frame de futuros
         weap_model.build_future_id_df()

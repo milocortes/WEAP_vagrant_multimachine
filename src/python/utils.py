@@ -78,7 +78,9 @@ def get_full_balance(path_balance, path_ZB, dir_exit, temp_path, aliases, zones)
 class LP_WEAP(object):
     """docstring for ."""
 
-    def __init__(self,clima, demanda, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores):
+    def __init__(self, acciones, activaciones, clima, demanda, start_year, end_year, output_path_WEAP,output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores):
+        self.acciones = acciones
+        self.activaciones = activaciones
         self.clima = clima
         self.demanda = demanda
         self.demanda_valores = demanda_valores
@@ -95,10 +97,12 @@ class LP_WEAP(object):
         self.Sc = Sc
 
     def build_future_id_df(self):
-        clima = self.clima
-        future = clima.merge(self.demanda, how = "cross")[["GCM","Demanda"]].reset_index(drop=True)
+        acciones = self.acciones
+        #clima = self.clima
+        future = acciones.merge(self.clima, how = "cross")[["Acciones","GCM"]].reset_index(drop=True)
+        future = future.merge(self.demanda, how = "cross")[["Acciones","GCM","Demanda"]].reset_index(drop=True)
         future["ID"] = range(future.shape[0])
-        future = future[["ID", "GCM","Demanda"]]
+        future = future[["ID", "Acciones", "GCM","Demanda"]]
 
         self.future = future
         future.to_csv('RunIDs.csv')
@@ -115,6 +119,8 @@ class LP_WEAP(object):
         WEAP.EndYear = self.end_year
 
         # Build Variable Branches
+        print(self.future.iloc[action_id]["Acciones"], self.future.iloc[action_id]["GCM"], self.future.iloc[action_id]["Demanda"])
+
         print("-------------------------")
         print("******   CLIMA   ********")
         print("-------------------------")
@@ -157,11 +163,40 @@ class LP_WEAP(object):
 
         demand = self.future.iloc[action_id]["Demanda"]
 
-        delta_riego = round(self.demanda_valores.query(f"Demanda=='{demand}'")['AreasRiego'].values[0],2)
+        delta_riego = round(self.demanda_valores.query(f"Demanda=='{demand}'")['Areas Riego'].values[0],2)
         delta_poblacion = round(self.demanda_valores.query(f"Demanda=='{demand}'")['Poblacion'].values[0],2)
 
-        WEAP.Branch('\\Key Assumptions\\VariacionAreasRiego').Variables(1).Expression = f"Step( 1979,1,  2021,{delta_riego})"
+        WEAP.Branch('\\Key Assumptions\\VariacionAreasRiego').Variables(1).Expression = f"Interp( 1979,1,  2021,1, 2030,{delta_riego})"
         WEAP.Branch('\\Key Assumptions\\VariacionPoblacion').Variables(1).Expression = f"Step( 1979,1,  2021,{delta_poblacion})"
+
+        print("----------------------------")
+        print("******   ACCIONES   ********")
+        print("----------------------------")
+
+        policy = self.future.iloc[action_id]["Acciones"]
+        acciones_2_agrupado = self.activaciones.groupby("Acciones")
+        policy_year = self.activaciones.query(f"Acciones=='{policy}'")['Activacion'].values[0]
+        print(policy, policy_year)
+        
+        if self.future.iloc[action_id]["Acciones"] == "Sin implementacion de acciones":
+            for i in self.activaciones["BranchVariable"]:
+                WEAP.BranchVariable(i).Expression='2200'
+                print(i, policy_year)
+        else:
+            ac =  self.future.iloc[action_id]["Acciones"]
+            anio_activacion = policy_year
+
+            for i in acciones_2_agrupado.get_group(ac)["BranchVariable"]:
+                WEAP.BranchVariable(i).Expression=f"{policy_year}"
+                print(i, policy_year)
+
+            acciones_2_agrupado_index = list(acciones_2_agrupado.get_group(ac).index)
+            sin_cambios = list(set(list(self.acciones_valores.index)).symmetric_difference(acciones_2_agrupado_index))
+
+            for i in self.activaciones.iloc[sin_cambios]["BranchVariable"]:
+                WEAP.BranchVariable(i).Expression='2200'
+                print(i, policy_year)
+
 
         WEAP.Calculate()
 
