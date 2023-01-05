@@ -15,8 +15,8 @@ acumula_asteriscos = "|"
 cuenta_files = 0
 cuenta_anios = 0
 
-start_year = 1979
-final_year = 2059
+start_year = 2015
+final_year = 2060
 
 anios_total = range(start_year,final_year)
 
