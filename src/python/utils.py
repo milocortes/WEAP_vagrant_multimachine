@@ -115,9 +115,7 @@ class LP_WEAP(object):
         WEAP.ActiveScenario = WEAP.Scenarios("Reference")
 
         policy = self.future.iloc[action_id]["Acciones"]
-        acciones_2_agrupado = self.activaciones.groupby("Acciones")
-        policy_year = self.activaciones.query(f"Acciones=='{policy}'")['Activacion']
-        print(policy, policy_year)
+        #print(policy, policy_year)
         
         if self.future.iloc[action_id]["Acciones"] == "Sin implementacion de acciones":
             for i in self.activaciones["BranchVariable"]:
@@ -127,13 +125,15 @@ class LP_WEAP(object):
                     WEAP.BranchVariable(i).Expression='0'
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
-                print(i, policy_year)
+                #print(i, policy_year)
         else:
             ac =  self.future.iloc[action_id]["Acciones"]
+            acciones_2_agrupado = self.activaciones.groupby("Acciones")
+            policy_year = self.activaciones.query(f"Acciones=='{policy}'")['Activacion'].values[0]
         
             for i in acciones_2_agrupado.get_group(ac)["BranchVariable"]:
                 WEAP.BranchVariable(i).Expression=f"{policy_year}"
-                print(i, policy_year)
+                #print(i, policy_year)
 
             acciones_2_agrupado_index = list(acciones_2_agrupado.get_group(ac).index)
             sin_cambios = list(set(list(self.activaciones.index)).symmetric_difference(acciones_2_agrupado_index))
@@ -145,7 +145,7 @@ class LP_WEAP(object):
                     WEAP.BranchVariable(i).Expression='0'
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
-                print(i)
+                #print(i)
 
         WEAP.Calculate()
 
