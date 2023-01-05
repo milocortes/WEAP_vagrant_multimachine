@@ -110,7 +110,7 @@ else:
         demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
         start_year = 2015
-        end_year = 2060 ###
+        end_year = 2060 
 
         output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
         output_path_MODFLOW = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\MODFLOW"
