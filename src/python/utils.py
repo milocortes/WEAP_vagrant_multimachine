@@ -174,7 +174,7 @@ class LP_WEAP(object):
         print("---------------------------------------------------------")
 
         # Leer archivo .hed o .cbb para extraer flujo en las celdas y volumenes
-        nombre_carpeta_MF = 'NWT_RDM_v22'
+        nombre_carpeta_MF = 'NWT_RDM_2014'
 
         # Se crea ruta según runID
         dir_version = os.path.join(self.output_path_MODFLOW, version)
@@ -258,7 +258,7 @@ class LP_WEAP(object):
         f = open(Pth_UPW,'r')
         Values_Ss = []
 
-        lines_to_read = list(range(20315, 30461))
+        lines_to_read = list(range(20316, 30462))
         for position, line in enumerate(f):
             if position in lines_to_read:
                 line = line[2:]
@@ -272,7 +272,7 @@ class LP_WEAP(object):
 
         f = open(Pth_UPW,'r')
         Values_Sy = []
-        lines_to_read = list(range(30462, 40610))
+        lines_to_read = list(range(30463, 40610))
 
         for position, line in enumerate(f):
             if position in lines_to_read:

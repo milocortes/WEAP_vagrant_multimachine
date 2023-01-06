@@ -9,7 +9,7 @@ with open('log_execution.txt') as f:
 
 all_lines = ",".join(all_lines)
 
-os.chdir(r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM\NWT_RDM_v22")
+os.chdir(r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM\NWT_RDM_2014")
 
 acumula_asteriscos = "|"
 cuenta_files = 0
