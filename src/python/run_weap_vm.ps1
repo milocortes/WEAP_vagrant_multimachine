@@ -18,7 +18,7 @@ function valores_array($n,$total_mv,$mv){
 
 function run_weap(){
 
-  $vm = [int]((hostname) -replace '\D+(\d+)','$1')
+  $vm = [int]((hostname) -replace '\D+(\d+)','$1') - 1
 
   Write-Host "Comenzamos la ejecución en la Máquina Virtual " $vm
 
