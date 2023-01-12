@@ -41,7 +41,8 @@ class LP_WEAP(object):
         acciones = self.acciones
         future = acciones.merge(self.clima, how = "cross")[["Acciones","GCM"]].reset_index(drop=True)
         future = future.merge(self.demanda, how = "cross")[["Acciones","GCM","Demanda"]].reset_index(drop=True)
-        future["ID"] = range(future.shape[0])
+        #future["ID"] = range(future.shape[0]) 
+        future["ID"] = range(810,891) # Por corridas agregadas      
         future = future[["ID", "Acciones", "GCM","Demanda"]]
 
         self.future = future
@@ -157,17 +158,18 @@ class LP_WEAP(object):
 
         for i,j in zip(favorites["BranchVariable"],favorites["WEAP Export"]):
             WEAP.LoadFavorite(i)
-            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id}_{j}.csv"), True, True, True, False, False)
+            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id+810}_{j}.csv"), True, True, True, False, False)
 
     ############################################################################
     ####                  PRE-PROCESSING MODFLOW RESULTS                    ####
     ####    COMENTARIO: La versión hace referencia al ID de la ejecución    ####
     ####                ruta_WEAP se especifica según la PC del usuario     ####
+
     ############################################################################
 
     def processing_MODFLOW(self):
 
-        version = f'run_id_{self.action_id}'
+        version = f'run_id_{self.action_id+810}'
 
         print("---------------------------------------------------------")
         print("******  EXPORT MODFLOW RESULTS - VOLUMENES SHAC  ********")

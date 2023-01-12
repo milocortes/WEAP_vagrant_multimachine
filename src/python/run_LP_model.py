@@ -4,7 +4,7 @@ from utils import *
 import warnings
 warnings.filterwarnings('ignore')
 
-## Recibe run_in
+## Recibe run_id
 run_id = int(sys.argv[1]) - 1
 
 all_lines = []
