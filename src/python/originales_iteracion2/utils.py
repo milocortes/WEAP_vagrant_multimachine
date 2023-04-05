@@ -41,12 +41,14 @@ class LP_WEAP(object):
         acciones = self.acciones
         future = acciones.merge(self.clima, how = "cross")[["Acciones","GCM"]].reset_index(drop=True)
         future = future.merge(self.demanda, how = "cross")[["Acciones","GCM","Demanda"]].reset_index(drop=True)
-        future["ID"] = range(future.shape[0])   
+        #future["ID"] = range(future.shape[0]) 
+        future["ID"] = range(810,891) # Por corridas agregadas      
         future = future[["ID", "Acciones", "GCM","Demanda"]]
 
         self.future = future
         future.to_csv('RunIDs.csv')
-    
+        print(future)
+
     def run_WEAP_model(self, action_id):
         self.action_id = action_id
 
@@ -71,17 +73,18 @@ class LP_WEAP(object):
             Branch_ZR_MinT = "\\Demand Sites and Catchments\\" + str(k) + ":Min Temperature"
             Branch_ZR_MaxT = "\\Demand Sites and Catchments\\" + str(k) + ":Max Temperature"
             if gcm == 'Clima historico':
-                RF_ZR_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Agro_LPQ_Corregida.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)'                
-                RF_ZR_MinT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmin_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + str(k[11:13])
-                RF_ZR_MaxT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmax_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + str(k[11:13])
+                RF_ZR_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Agro_LPQ_Corregida.csv, "' + str(k) +'", , Average, , Interpolate)'                
+                RF_ZR_MinT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmin_Agro_LPQ.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\' + str(k)
+                RF_ZR_MaxT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmax_Agro_LPQ.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\' + str(k)
             else:
-                RF_ZR_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)'
-                RF_ZR_MinT = 'ReadFromFile(Datos\GCMs\\tasmin_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + str(k[11:13])
-                RF_ZR_MaxT = 'ReadFromFile(Datos\GCMs\\tasmax_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + str(k[11:13])
+                RF_ZR_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "' + str(k) +'", , Average, , Interpolate)'
+                RF_ZR_MinT = 'ReadFromFile(Datos\GCMs\\tasmin_LPQ_' + gcm + '.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\' + str(k)
+                RF_ZR_MaxT = 'ReadFromFile(Datos\GCMs\\tasmax_LPQ_' + gcm + '.csv, "' + str(k) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\' + str(k)
 
             WEAP.BranchVariable(Branch_ZR_P).Expression = RF_ZR_P # Precipitation
             WEAP.BranchVariable(Branch_ZR_MinT).Expression = RF_ZR_MinT # Min Temperature
             WEAP.BranchVariable(Branch_ZR_MaxT).Expression = RF_ZR_MaxT # Max Temperature
+            #print(Branch_ZR_P, RF_ZR_P)
 
         for m in self.Sc:
             Branch_Sc_P = '\\Key Assumptions\\Series SMM\\PP\\' + str(m)
@@ -94,7 +97,7 @@ class LP_WEAP(object):
                 RF_Sc_T = 'ReadFromFile(Datos\GCMs\\tas_LPQ_' + gcm + '.csv, "Subcuenca_' + str(m) + '", , Average, , Replace)'
             WEAP.Branch(Branch_Sc_P).Variables(1).Expression = RF_Sc_P # Precipitation
             WEAP.Branch(Branch_Sc_T).Variables(1).Expression = RF_Sc_T # Temperature
-        
+
         print("---------------------------")
         print("******   DEMANDA   ********")
         print("---------------------------")
@@ -106,7 +109,7 @@ class LP_WEAP(object):
 
         WEAP.Branch('\\Key Assumptions\\VariacionAreasRiego').Variables(1).Expression = f"Interp( 1979,1,  2021,1, 2030,{delta_riego})"
         WEAP.Branch('\\Key Assumptions\\VariacionPoblacion').Variables(1).Expression = f"Step( 1979,1,  2021,{delta_poblacion})"
-        
+
         print("----------------------------")
         print("******   ACCIONES   ********")
         print("----------------------------")
@@ -119,7 +122,7 @@ class LP_WEAP(object):
             for i in self.activaciones["BranchVariable"]:
                 if i == "\Key Assumptions\Factor_Prorrateo":
                     WEAP.BranchVariable(i).Expression='1'
-                elif i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Estero_Alicahue:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Cabildo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Pueblo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Costa:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Petorca\Flow Requirements\Rio_Pedernal:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Petorca\Flow Requirements\Rio_Petorca_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Petorca\Flow Requirements\Rio_Petorca_Poniente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Estero_LaPatagua\Flow Requirements\Estero_Patagua:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Sobrante\Flow Requirements\Rio_Del_Sobrante:Minimum Flow Requirement':       
+                elif i == '\Supply and Resources\River\Estero Los Angeles\Flow Requirements\Estero_Los_Angeles:Minimum Flow Requirement' or i == '\Supply and Resources\River\EsteroLasPalmas\Flow Requirements\Estero_Las_Palmas:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Estero_Alicahue:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Cabildo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Pueblo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Costa:Minimum Flow Requirement' or i == '\Supply and Resources\River\Petorca\Flow Requirements\Rio_Pedernal:Minimum Flow Requirement' or i == '\Supply and Resources\River\Petorca\Flow Requirements\Rio_Petorca_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Petorca\Flow Requirements\Rio_Petorca_Poniente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio Ligua09\Flow Requirements\Estero_Patagua:Minimum Flow Requirement' or i == '\Supply and Resources\River\Sobrante\Flow Requirements\Rio_Del_Sobrante:Minimum Flow Requirement':
                     WEAP.BranchVariable(i).Expression='0'
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
@@ -139,12 +142,12 @@ class LP_WEAP(object):
             for i in self.activaciones.iloc[sin_cambios]["BranchVariable"]:
                 if i == "\Key Assumptions\Factor_Prorrateo":
                     WEAP.BranchVariable(i).Expression='1'
-                elif i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Estero_Alicahue:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Cabildo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Pueblo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_LaLigua\Flow Requirements\Rio_Ligua_Costa:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Petorca\Flow Requirements\Rio_Pedernal:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Petorca\Flow Requirements\Rio_Petorca_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Petorca\Flow Requirements\Rio_Petorca_Poniente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Estero_LaPatagua\Flow Requirements\Estero_Patagua:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio_Sobrante\Flow Requirements\Rio_Del_Sobrante:Minimum Flow Requirement':
+                elif i == '\Supply and Resources\River\Estero Los Angeles\Flow Requirements\Estero_Los_Angeles:Minimum Flow Requirement' or i == '\Supply and Resources\River\EsteroLasPalmas\Flow Requirements\Estero_Las_Palmas:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Estero_Alicahue:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Cabildo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Pueblo:Minimum Flow Requirement' or i == '\Supply and Resources\River\Ligua\Flow Requirements\Rio_Ligua_Costa:Minimum Flow Requirement' or i == '\Supply and Resources\River\Petorca\Flow Requirements\Rio_Pedernal:Minimum Flow Requirement' or i == '\Supply and Resources\River\Petorca\Flow Requirements\Rio_Petorca_Oriente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Petorca\Flow Requirements\Rio_Petorca_Poniente:Minimum Flow Requirement' or i == '\Supply and Resources\River\Rio Ligua09\Flow Requirements\Estero_Patagua:Minimum Flow Requirement' or i == '\Supply and Resources\River\Sobrante\Flow Requirements\Rio_Del_Sobrante:Minimum Flow Requirement':
                     WEAP.BranchVariable(i).Expression='0'
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
                 #print(i)
-        """
+
         WEAP.Calculate()
 
         print("---------------------------------------")
@@ -361,4 +364,3 @@ class LP_WEAP(object):
                 Escenarios_Volumen_Freatico['Year'] = anio[e]
                 Escenarios_Volumen_Freatico['Week'] = week[e]
                 Escenarios_Volumen_Freatico.to_csv(os.path.join(Path_out,'Volumen - SHAC - '+zones[i]+'.csv'))
-                """
