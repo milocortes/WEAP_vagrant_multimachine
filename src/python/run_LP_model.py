@@ -28,7 +28,7 @@ if not all_lines:
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
         demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
-        start_year = 1979
+        start_year = 2015
         end_year = 2060 ###
 
         output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
@@ -37,8 +37,10 @@ if not all_lines:
         ZB = ['Zones.zbr', 'Zones_RL.zbr']
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
-        ZR = ['Agricola_L05', 'Agricola_L06', 'Agricola_L07', 'Agricola_L08', 'Agricola_L09', 'Agricola_L10', 'Agricola_P02', 'Agricola_P05', 'Agricola_P06', 'Agricola_P07', 'Agricola_P08']
-        Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
+        ZR = ['Agricola_ZR02_P01', 'Agricola_ZR05_L01', 'Agricola_ZR05_P02', 'Agricola_ZR06_L02', 'Agricola_ZR06_P03', 'Agricola_ZR07_L05', 'Agricola_ZR07_P07', 'Agricola_ZR08_L06', 
+              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10_L12']
+        Sc = ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08']
+        
         #### Inicializamos el modelo 
         weap_model = LP_WEAP(acciones, activaciones, clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
 
@@ -68,7 +70,7 @@ elif  str(run_id) == all_lines[-1]:
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
         demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
-        start_year = 1979
+        start_year = 2015
         end_year = 2060 ###
 
         output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
@@ -77,8 +79,9 @@ elif  str(run_id) == all_lines[-1]:
         ZB = ['Zones.zbr', 'Zones_RL.zbr']
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
-        ZR = ['Agricola_L05', 'Agricola_L06', 'Agricola_L07', 'Agricola_L08', 'Agricola_L09', 'Agricola_L10', 'Agricola_P02', 'Agricola_P05', 'Agricola_P06', 'Agricola_P07', 'Agricola_P08']
-        Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
+        ZR = ['Agricola_ZR02_P01', 'Agricola_ZR05_L01', 'Agricola_ZR05_P02', 'Agricola_ZR06_L02', 'Agricola_ZR06_P03', 'Agricola_ZR07_L05', 'Agricola_ZR07_P07', 'Agricola_ZR08_L06', 
+              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10_L12']
+        Sc = ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08']
 
         #### Inicializamos el modelo 
         weap_model = LP_WEAP(acciones, activaciones, clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
@@ -109,7 +112,7 @@ else:
         demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
         demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
-        start_year = 1979
+        start_year = 2015
         end_year = 2060
 
         output_path_WEAP = r"C:\Users\vagrant\Documents\WEAP_vagrant_multimachine\src\output\WEAP"
@@ -118,8 +121,9 @@ else:
         ZB = ['Zones.zbr', 'Zones_RL.zbr']
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
-        ZR = ['Agricola_L05', 'Agricola_L06', 'Agricola_L07', 'Agricola_L08', 'Agricola_L09', 'Agricola_L10', 'Agricola_P02', 'Agricola_P05', 'Agricola_P06', 'Agricola_P07', 'Agricola_P08']
-        Sc = ['L01','L02','L03','L04','L05','L06','L07','L08','L09','L10','P01','P02','P03','P04','P05','P06','P07','P08']
+        ZR = ['Agricola_ZR02_P01', 'Agricola_ZR05_L01', 'Agricola_ZR05_P02', 'Agricola_ZR06_L02', 'Agricola_ZR06_P03', 'Agricola_ZR07_L05', 'Agricola_ZR07_P07', 'Agricola_ZR08_L06', 
+              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10_L12']
+        Sc = ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08']
 
         #### Inicializamos el modelo 
         weap_model = LP_WEAP(acciones, activaciones, clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)

@@ -144,7 +144,7 @@ class LP_WEAP(object):
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
                 #print(i)
-        """
+        
         WEAP.Calculate()
 
         print("---------------------------------------")
@@ -155,7 +155,7 @@ class LP_WEAP(object):
 
         for i,j in zip(favorites["BranchVariable"],favorites["WEAP Export"]):
             WEAP.LoadFavorite(i)
-            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id+810}_{j}.csv"), True, True, True, False, False)
+            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id}_{j}.csv"), True, True, True, False, False)
 
     ############################################################################
     ####                  PRE-PROCESSING MODFLOW RESULTS                    ####
@@ -166,14 +166,14 @@ class LP_WEAP(object):
 
     def processing_MODFLOW(self):
 
-        version = f'run_id_{self.action_id+810}'
+        version = f'run_id_{self.action_id}'
 
         print("---------------------------------------------------------")
         print("******  EXPORT MODFLOW RESULTS - VOLUMENES SHAC  ********")
         print("---------------------------------------------------------")
 
         # Leer archivo .hed o .cbb para extraer flujo en las celdas y volumenes
-        nombre_carpeta_MF = 'NWT_RDM_2014'
+        nombre_carpeta_MF = 'NWT_RDM_v23_2014'
 
         # Se crea ruta según runID
         dir_version = os.path.join(self.output_path_MODFLOW, version)
@@ -361,4 +361,3 @@ class LP_WEAP(object):
                 Escenarios_Volumen_Freatico['Year'] = anio[e]
                 Escenarios_Volumen_Freatico['Week'] = week[e]
                 Escenarios_Volumen_Freatico.to_csv(os.path.join(Path_out,'Volumen - SHAC - '+zones[i]+'.csv'))
-                """
