@@ -257,7 +257,7 @@ class LP_WEAP(object):
         f = open(Pth_UPW,'r')
         Values_Ss = []
 
-        lines_to_read = list(range(20316, 30462))
+        lines_to_read = list(range(20317, 30463))
         for position, line in enumerate(f):
             if position in lines_to_read:
                 line = line[2:]
@@ -271,7 +271,7 @@ class LP_WEAP(object):
 
         f = open(Pth_UPW,'r')
         Values_Sy = []
-        lines_to_read = list(range(30463, 40610))
+        lines_to_read = list(range(30464, 40611))
 
         for position, line in enumerate(f):
             if position in lines_to_read:

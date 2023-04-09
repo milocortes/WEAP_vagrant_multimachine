@@ -5,8 +5,8 @@ clima = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Clima")
 demanda = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda")
 demanda_valores = pd.read_excel("../datos/Characterization.xlsx",sheet_name="Demanda2")
 
-start_year = 1979
-end_year = 2020 ###
+start_year = 2015
+end_year = 2060 ###
 
 output_path_WEAP = r"C:\Users\Francisco Suárez P\Desktop\GitHub - KT\WEAP_vagrant_multimachine\src\output\WEAP"
 output_path_MODFLOW = r"C:\Users\Francisco Suárez P\Desktop\GitHub - KT\WEAP_vagrant_multimachine\src\output\MODFLOW"
@@ -24,6 +24,6 @@ weap_model = LP_WEAP(acciones, activaciones, clima, demanda, start_year, end_yea
 #### Generamos el data frame de futuros
 weap_model.build_future_id_df()
 
-weap_model.run_WEAP_model(0)
+weap_model.run_WEAP_model(78)
 
 weap_model.processing_MODFLOW() 
