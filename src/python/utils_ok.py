@@ -147,6 +147,16 @@ class LP_WEAP(object):
         
         WEAP.Calculate()
 
+        print("---------------------------------------")
+        print("******   EXPORT WEAP RESULTS   ********")
+        print("---------------------------------------")
+
+        favorites = pd.read_excel("../datos/Favorites_WEAP.xlsx")
+
+        for i,j in zip(favorites["BranchVariable"],favorites["WEAP Export"]):
+            WEAP.LoadFavorite(i)
+            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id}_{j}.csv"), True, True, True, False, False)
+
     ############################################################################
     ####                  PRE-PROCESSING MODFLOW RESULTS                    ####
     ####    COMENTARIO: La versión hace referencia al ID de la ejecución    ####
