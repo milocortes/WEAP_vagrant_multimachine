@@ -71,13 +71,23 @@ class LP_WEAP(object):
             Branch_ZR_MinT = "\\Demand Sites and Catchments\\" + str(k) + ":Min Temperature"
             Branch_ZR_MaxT = "\\Demand Sites and Catchments\\" + str(k) + ":Max Temperature"
             if gcm == 'Clima historico':
-                RF_ZR_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Agro_LPQ_Corregida.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)'                
-                RF_ZR_MinT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmin_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + str(k[11:13])
-                RF_ZR_MaxT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmax_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + str(k[11:13])
+                if k == 'Agricola_ZR12_L12':
+                    RF_ZR_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Agro_LPQ_Corregida.csv, "Agricola_' + str(k[14:15]) + '10", , Average, , Interpolate)'                
+                    RF_ZR_MinT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmin_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + '10", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + '10'
+                    RF_ZR_MaxT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmax_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + '10", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + '10'    
+                else:
+                    RF_ZR_P = 'ReadFromFile(Datos\\variables climaticas LPQ\pr_Agro_LPQ_Corregida.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)'                
+                    RF_ZR_MinT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmin_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + str(k[11:13])
+                    RF_ZR_MaxT = 'ReadFromFile(Datos\\variables climaticas LPQ\\tmax_Agro_LPQ.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + str(k[11:13])
             else:
-                RF_ZR_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)'
-                RF_ZR_MinT = 'ReadFromFile(Datos\GCMs\\tasmin_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + str(k[11:13])
-                RF_ZR_MaxT = 'ReadFromFile(Datos\GCMs\\tasmax_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + str(k[11:13])
+                if k == 'Agricola_ZR12_L12':
+                    RF_ZR_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + '10", , Average, , Interpolate)'
+                    RF_ZR_MinT = 'ReadFromFile(Datos\GCMs\\tasmin_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + '10", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + '10'
+                    RF_ZR_MaxT = 'ReadFromFile(Datos\GCMs\\tasmax_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + '10", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + '10'
+                else:    
+                    RF_ZR_P = 'ReadFromFile(Datos\GCMs\pr_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)'
+                    RF_ZR_MinT = 'ReadFromFile(Datos\GCMs\\tasmin_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmin\\Agricola_' + str(k[14:15]) + str(k[11:13])
+                    RF_ZR_MaxT = 'ReadFromFile(Datos\GCMs\\tasmax_LPQ_' + gcm + '.csv, "Agricola_' + str(k[14:15]) + str(k[11:13]) + '", , Average, , Interpolate)+Key\Ajuste_T_MABIA\Tmax\\Agricola_' + str(k[14:15]) + str(k[11:13])
 
             WEAP.BranchVariable(Branch_ZR_P).Expression = RF_ZR_P # Precipitation
             WEAP.BranchVariable(Branch_ZR_MinT).Expression = RF_ZR_MinT # Min Temperature
@@ -123,19 +133,19 @@ class LP_WEAP(object):
                     WEAP.BranchVariable(i).Expression='0'
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
-                #print(i, policy_year)
+        elif self.future.iloc[action_id]["Acciones"] == "Todas las acciones":
+            todas_acciones = self.activaciones  
+            for i,j in zip(todas_acciones["BranchVariable"],todas_acciones["Activacion"]):
+                WEAP.BranchVariable(i).Expression=j        
         else:
             ac =  self.future.iloc[action_id]["Acciones"]
             acciones_2_agrupado = self.activaciones.groupby("Acciones")
             policy_year = self.activaciones.query(f"Acciones=='{policy}'")['Activacion'].values[0]
-        
             for i in acciones_2_agrupado.get_group(ac)["BranchVariable"]:
                 WEAP.BranchVariable(i).Expression=f"{policy_year}"
-                #print(i, policy_year)
 
             acciones_2_agrupado_index = list(acciones_2_agrupado.get_group(ac).index)
             sin_cambios = list(set(list(self.activaciones.index)).symmetric_difference(acciones_2_agrupado_index))
-
             for i in self.activaciones.iloc[sin_cambios]["BranchVariable"]:
                 if i == "\Key Assumptions\Factor_Prorrateo":
                     WEAP.BranchVariable(i).Expression='1'
@@ -143,9 +153,18 @@ class LP_WEAP(object):
                     WEAP.BranchVariable(i).Expression='0'
                 else:
                     WEAP.BranchVariable(i).Expression='2200'
-                #print(i)
         
         WEAP.Calculate()
+
+        print("---------------------------------------")
+        print("******   EXPORT WEAP RESULTS   ********")
+        print("---------------------------------------")
+
+        favorites = pd.read_excel("../datos/Favorites_WEAP.xlsx")
+
+        for i,j in zip(favorites["BranchVariable"],favorites["WEAP Export"]):
+            WEAP.LoadFavorite(i)
+            WEAP.ExportResults(os.path.join(self.output_path_WEAP,f"run_id_{action_id}_{j}.csv"), True, True, True, False, False)
 
     ############################################################################
     ####                  PRE-PROCESSING MODFLOW RESULTS                    ####

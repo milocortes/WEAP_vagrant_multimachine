@@ -38,7 +38,7 @@ if not all_lines:
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
         ZR = ['Agricola_ZR02_P01', 'Agricola_ZR05_L01', 'Agricola_ZR05_P02', 'Agricola_ZR06_L02', 'Agricola_ZR06_P03', 'Agricola_ZR07_L05', 'Agricola_ZR07_P07', 'Agricola_ZR08_L06', 
-              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10_L12']
+              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10', 'Agricola_ZR12_L12']
         Sc = ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08']
         
         #### Inicializamos el modelo 
@@ -80,7 +80,7 @@ elif  str(run_id) == all_lines[-1]:
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
         ZR = ['Agricola_ZR02_P01', 'Agricola_ZR05_L01', 'Agricola_ZR05_P02', 'Agricola_ZR06_L02', 'Agricola_ZR06_P03', 'Agricola_ZR07_L05', 'Agricola_ZR07_P07', 'Agricola_ZR08_L06', 
-              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10_L12']
+              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10', 'Agricola_ZR12_L12']
         Sc = ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08']
 
         #### Inicializamos el modelo 
@@ -122,7 +122,7 @@ else:
         zones = ['P01','P02','P03','P07','P08','L01','L02','L05','L06','L09','L10','L12']
         path_WEAP = r"C:\Users\vagrant\Documents\WEAP Areas\Ligua_Petorca_WEAP_MODFLOW_RDM"
         ZR = ['Agricola_ZR02_P01', 'Agricola_ZR05_L01', 'Agricola_ZR05_P02', 'Agricola_ZR06_L02', 'Agricola_ZR06_P03', 'Agricola_ZR07_L05', 'Agricola_ZR07_P07', 'Agricola_ZR08_L06', 
-              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10_L12']
+              'Agricola_ZR08_P08', 'Agricola_ZR09_L09', 'Agricola_ZR10_L10', 'Agricola_ZR12_L12']
         Sc = ['L01', 'L02', 'L03', 'L04', 'L05', 'L06', 'L07', 'L08', 'L09', 'L10', 'P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08']
 
         #### Inicializamos el modelo 
