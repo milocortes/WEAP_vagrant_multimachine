@@ -1,4 +1,4 @@
-param($p1, $p2)
+param($p1)
 
 $num_experimentos = [int]($p1)
 
