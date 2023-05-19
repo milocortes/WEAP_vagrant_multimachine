@@ -5,6 +5,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from request_server.request_server import send_request_py
+import datetime
 
 ## Recibe run_id
 #run_id = int(sys.argv[1]) - 1
@@ -132,10 +133,36 @@ else:
         weap_model = LP_WEAP(acciones, activaciones, clima, demanda, start_year, end_year, output_path_WEAP, output_path_MODFLOW, path_WEAP, ZB, zones, ZR, Sc, demanda_valores)
 
         #### Generamos el data frame de futuros
+        print(f"""
+                -------------------------------------------------
+                -------------------------------------------------
+
+                   Generamos el data frame de futuros   {run_id}\n{datetime.datetime.now()} 
+                -------------------------------------------------
+                -------------------------------------------------
+
+               """)
         weap_model.build_future_id_df()
 
         #### Corremos el modelo
         weap_model.run_WEAP_model(run_id)
+        print(f"""
+                -------------------------------------------------
+                -------------------------------------------------
 
+                   Corremos el modelo   {run_id}\n{datetime.datetime.now()} 
+                -------------------------------------------------
+                -------------------------------------------------
+
+               """)
         #### Procesamiento MODFLOW
         weap_model.processing_MODFLOW()
+        print(f"""
+                -------------------------------------------------
+                -------------------------------------------------
+
+                   Procesamiento MODFLOW   {run_id}\n{datetime.datetime.now()} 
+                -------------------------------------------------
+                -------------------------------------------------
+
+               """)
